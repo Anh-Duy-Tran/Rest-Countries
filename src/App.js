@@ -1,12 +1,17 @@
 import './App.css';
+import { BrowserRouter, Routes as Router, Route } from 'react-router-dom'
+import { UserProvider } from './context/UserProvider';
+import Mainpage from './pages/mainpage/Mainpage';
 
 function App() {
   return (
-    <div>
-      <p>
-        Hello, world
-      </p>
-    </div>
+    <UserProvider>
+      <BrowserRouter>
+        <Router>
+          <Route path="/" element={<Mainpage/>}/>
+        </Router>
+      </BrowserRouter>
+    </UserProvider>
   );
 }
 
