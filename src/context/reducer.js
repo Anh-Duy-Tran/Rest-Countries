@@ -30,6 +30,13 @@ export const reducer = (state, action) => {
       }
     }
 
+    case "update-query" : {
+      return {
+        ...state,
+        query : action.payload
+      }
+    }
+
 
     default:
       return state
@@ -39,5 +46,6 @@ export const reducer = (state, action) => {
 export const initialState = {
   countries : null,
   fetching : true,
-  country : null
+  country : null,
+  query : ''
 }

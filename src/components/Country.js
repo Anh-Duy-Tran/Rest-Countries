@@ -27,6 +27,10 @@ export default function CountryCard() {
     
   }, [id]);
 
+  const country = state.country;
+  const nativeNameLang = country !== null ? Object.keys(country.name.nativeName)[0] : '';
+  const nativeName = country !== null ? country.name.nativeName[nativeNameLang]["common"] : '';
+
   return (
     <>
     {
@@ -36,15 +40,17 @@ export default function CountryCard() {
             component="img"
             alt="green iguana"
             height=""
-            image={state.country.flags.png}
+            image={country.flags.png}
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
-              {id}
+              {`${id} (${nativeName})`}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Lizards are a widespread group of squamate reptiles, with over 6,000
-              species, ranging across all continents except Antarctica
+            <Typography variant="body1" color="text.secondary">
+              The official name of {country.name.common} is {country.name.official}, belongs to region {country.region} and 
+              subregion {country.subregion}. Located at the {country.latlng[0]}°N and {country.latlng[1]}°W, this coutry has 
+              population of {country.population} people and it {country.independent ? 'has' : 'has not'} gained the independent,
+              arccording to the CIA World Factbook.
             </Typography>
           </CardContent>
         </Card>

@@ -8,6 +8,8 @@ import InputBase from '@mui/material/InputBase';
 import Slide from '@mui/material/Slide';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
+import { Link } from '@mui/material';
+import { UserContext } from '../context/UserProvider';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -62,15 +64,24 @@ function HideOnScroll(props) {
 }
 
 export default function Navbar(props) {
+  const [ , dispatch ] = React.useContext(UserContext);
+
+  const onChageSearch = (e) => {
+    dispatch({type : "update-query", payload : e.target.value })
+  }
+
+
   return (
     <React.Fragment>
       <CssBaseline />
       <HideOnScroll {...props}>
         <AppBar>
           <Toolbar>
-            <Typography variant="h6" component="div">
-              Coutries
-            </Typography>
+            <Link href='/' sx={{color : 'white'}}>
+              <Typography variant="h6" component="div">
+                Coutries
+              </Typography>
+            </Link>
             <Search>
               <SearchIconWrapper>
                 <SearchIcon />
@@ -78,6 +89,7 @@ export default function Navbar(props) {
               <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ 'aria-label': 'search' }}
+                onChange={onChageSearch}
               />
             </Search>
           </Toolbar>

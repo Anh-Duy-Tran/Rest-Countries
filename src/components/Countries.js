@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -10,7 +9,6 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import { visuallyHidden } from '@mui/utils';
 import { UserContext } from '../context/UserProvider';
@@ -22,6 +20,7 @@ function createData(country) {
     name : country.name.common,
     region : country.region,
     capital : country.capital,
+    languages : country.languages,
     population : country.population,
   };
 }
@@ -51,21 +50,27 @@ const headCells = [
   },
   {
     id: 'name',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Name',
   },
   {
     id: 'region',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Region',
   },
   {
     id: 'capital',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Capital',
+  },
+  {
+    id: 'languages',
+    numeric: false,
+    disablePadding: false,
+    label: 'Languages',
   },
   {
     id: 'population',
@@ -112,19 +117,20 @@ function EnhancedTableHead(props) {
 }
 
 export default function Countries() {
-  const [ state, dispatch ] = React.useContext(UserContext);
+  const [ state, ] = React.useContext(UserContext);
 
   const [ order, setOrder ] = React.useState('asc');
   const [ orderBy, setOrderBy ] = React.useState('calories');
-  const [ selected, setSelected ] = React.useState([]);
   const [ page, setPage ] = React.useState(0);
   const [ rowsPerPage, setRowsPerPage ] = React.useState(5);
 
   const rows = state.fetching === false 
-    ? state.countries.map(
-      country => createData(country)
-    )
+    ? state.countries
+        .filter(country => country.name.common.toLowerCase().includes(state.query.toLowerCase()))
+        .map(country => createData(country))
     : []
+
+  console.log(rows);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -141,8 +147,6 @@ export default function Countries() {
     setPage(0);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
-
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -158,14 +162,14 @@ export default function Countries() {
             size='medium'
           >
             <EnhancedTableHead
-              numSelected={selected.length}
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
             />
             <TableBody>
-              {rows.sort(getComparator(order, orderBy))
+              {rows
+                .sort(getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
 
@@ -175,19 +179,35 @@ export default function Countries() {
                         tabIndex={-1}
                         key={row.name}
                       >
-                          <Link href={`/country/${row.name}`}>
-                            <TableCell
-                              component="th"
-                              id={index}
-                              scope="row"
-                              padding="normal"
-                            >
-                              <img src={row.flag}></img>
-                            </TableCell>
-                          </Link>
-                          <TableCell align="right">{row.name}</TableCell>
+                          <TableCell
+                            component='a'
+                            id={index}
+                            scope="row"
+                            padding="normal"
+                            href={`/country/${row.name}`}
+                          >
+                            <img src={row.flag}></img>
+                          </TableCell>
+                          <TableCell 
+                            align="right"
+                            component='a'
+                            href={`/country/${row.name}`}
+                          >
+                            {row.name}
+                          </TableCell>
                           <TableCell align="right">{row.region}</TableCell>
                           <TableCell align="right">{row.capital}</TableCell>
+                          <TableCell align="left" padding= 'normal'>
+                            <ul>
+                              {
+                                row.languages !== null && row.languages !== undefined
+                                ? Object.keys(row.languages).map(
+                                    key => <li key={key}>{row.languages[key]}</li>
+                                  )
+                                : <li>None</li>
+                              }
+                            </ul>
+                          </TableCell>
                           <TableCell align="right" padding= 'normal'>{row.population}</TableCell>
                       </TableRow>
                   );
@@ -205,7 +225,7 @@ export default function Countries() {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[5, 10, 100]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
