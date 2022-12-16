@@ -129,9 +129,7 @@ export default function Countries() {
         .filter(country => country.name.common.toLowerCase().includes(state.query.toLowerCase()))
         .map(country => createData(country))
     : []
-
-  console.log(rows);
-
+    
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');

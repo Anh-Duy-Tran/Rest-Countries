@@ -27,7 +27,7 @@ export default function CountryCard() {
     
   }, [id]);
 
-  const country = state.country;
+  const country = state.fetching !== null ? state.country : null;
   const nativeNameLang = country !== null ? Object.keys(country.name.nativeName)[0] : '';
   const nativeName = country !== null ? country.name.nativeName[nativeNameLang]["common"] : '';
 
