@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -13,12 +12,9 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { UserContext } from '../context/UserProvider';
+import { Link } from '@mui/material';
 
 function createData(country) {
   return {
@@ -55,19 +51,19 @@ const headCells = [
   },
   {
     id: 'name',
-    numeric: false,
+    numeric: true,
     disablePadding: false,
     label: 'Name',
   },
   {
     id: 'region',
-    numeric: false,
+    numeric: true,
     disablePadding: false,
     label: 'Region',
   },
   {
     id: 'capital',
-    numeric: false,
+    numeric: true,
     disablePadding: false,
     label: 'Capital',
   },
@@ -136,35 +132,6 @@ export default function Countries() {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -194,7 +161,6 @@ export default function Countries() {
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
             />
@@ -202,33 +168,28 @@ export default function Countries() {
               {rows.sort(getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.name)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.name}
-                      selected={isItemSelected}
-                    >
-            
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="normal"
+                      <TableRow
+                        hover
+                        tabIndex={-1}
+                        key={row.name}
                       >
-                        <img src={row.flag}></img>
-                      </TableCell>
-                      <TableCell align="right">{row.name}</TableCell>
-                      <TableCell align="right">{row.region}</TableCell>
-                      <TableCell align="right">{row.capital}</TableCell>
-                      <TableCell align="right" padding= 'normal'>{row.population}</TableCell>
-                    </TableRow>
+                          <Link href={`/country/${row.name}`}>
+                            <TableCell
+                              component="th"
+                              id={index}
+                              scope="row"
+                              padding="normal"
+                            >
+                              <img src={row.flag}></img>
+                            </TableCell>
+                          </Link>
+                          <TableCell align="right">{row.name}</TableCell>
+                          <TableCell align="right">{row.region}</TableCell>
+                          <TableCell align="right">{row.capital}</TableCell>
+                          <TableCell align="right" padding= 'normal'>{row.population}</TableCell>
+                      </TableRow>
                   );
                 })}
               {emptyRows > 0 && (

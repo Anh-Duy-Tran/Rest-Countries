@@ -23,6 +23,13 @@ export const reducer = (state, action) => {
       }
     }
 
+    case "set-country" : {
+      return {
+        ...state,
+        country : {...action.payload}
+      }
+    }
+
 
     default:
       return state
@@ -32,4 +39,5 @@ export const reducer = (state, action) => {
 export const initialState = {
   countries : null,
   fetching : true,
+  country : null
 }

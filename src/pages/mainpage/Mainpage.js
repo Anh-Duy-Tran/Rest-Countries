@@ -1,7 +1,5 @@
 import Navbar from "../../components/Navbar";
 import styled from 'styled-components';
-import { useContext } from "react";
-import { UserContext } from "../../context/UserProvider";
 import Countries from "../../components/Countries";
 
 const Container = styled.div`
@@ -17,11 +15,6 @@ const Wrapper = styled.div`
 `
 
 const Mainpage = () => {
-  const [ state, dispatch ] = useContext(UserContext);
-
-  
-  console.log(!state.fetching ? state.countries : 0);
-
   return (
     <Container>
       <Navbar/>
