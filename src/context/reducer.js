@@ -19,7 +19,7 @@ export const reducer = (state, action) => {
     case "update-countries" : {
       return {
         ...state,
-        countries : [... action.payload]
+        countries : [...action.payload]
       }
     }
 

@@ -12,7 +12,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Paper from '@mui/material/Paper';
 import { visuallyHidden } from '@mui/utils';
 import { UserContext } from '../context/UserProvider';
-import { Link } from '@mui/material';
 
 function createData(country) {
   return {
@@ -81,8 +80,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
-    props;
+  const { order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -184,7 +182,7 @@ export default function Countries() {
                             padding="normal"
                             href={`/country/${row.name}`}
                           >
-                            <img src={row.flag}></img>
+                            <img alt={`${row.name} flag`} src={row.flag}></img>
                           </TableCell>
                           <TableCell 
                             align="right"

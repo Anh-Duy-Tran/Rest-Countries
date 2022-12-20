@@ -1,9 +1,7 @@
 import * as React from 'react';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { UserContext } from '../context/UserProvider';
 import { useParams } from 'react-router-dom';
@@ -25,7 +23,7 @@ export default function CountryCard() {
       })
       .catch(err => console.log(err));
     
-  }, [id]);
+  }, [id, dispatch]);
 
   const country = state.fetching !== null ? state.country : null;
   const nativeNameLang = country !== null ? Object.keys(country.name.nativeName)[0] : '';
